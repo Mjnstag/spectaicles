@@ -5,14 +5,22 @@
 </head>
 
 <body>
-    <script src="static/webcam.js"></script>
-    <p>
-        <button onclick="startWebcam();">Start WebCam</button>
-        <button onclick="getCurrentFrame();">Take Snapshot</button>
-    </p>
-    <!-- <video id="video" hidden autoplay></video> -->
-    <!-- <canvas id="myCanvas" hidden></canvas> -->
-    <img id="my-data-uri" src="">
+    <video id="videoElement"></video>
+    <script>const video = document.getElementById('videoElement');
+
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(function (err) {
+                    console.log('Error accessing camera:', err);
+                });
+        } else {
+            console.log('getUserMedia not supported');
+        }
+    </script>
 </body>
 
 </html>
