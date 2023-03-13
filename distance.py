@@ -3,6 +3,7 @@ import numpy as np
 
 # focal length can be gotten using F = (P x D) / W
 # where F is focal length, P is pixel width, D is distance from camera to object in cm, and W is width of object in real world in cm
+# formula from: https://pyimagesearch.com/2015/01/19/find-distance-camera-objectmarker-using-python-opencv/
 focalLength = 600
 object_size = 6.3  # in cm
 
