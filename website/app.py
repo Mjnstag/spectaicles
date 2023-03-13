@@ -6,7 +6,8 @@ app = Flask(__name__)
 # A simple page that says hello
 @app.route("/")
 def hello():
-    return "Hello World!"
+    return """Hello World!
+    <br><a href="/webcam">Webcam</a>"""
 
 
 @app.route("/webcam")

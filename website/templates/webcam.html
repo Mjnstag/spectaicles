@@ -2,10 +2,13 @@
 <html>
 
 <head>
+    <script src="https://docs.opencv.org/4.x/opencv.js" type="text/javascript"></script>
 </head>
 
 <body>
     <video id="videoElement"></video>
+    <canvas id="canvasElement" width="640" height="480"></canvas>
+
     <script>const video = document.getElementById('videoElement');
 
         if (navigator.mediaDevices.getUserMedia) {
@@ -20,6 +23,79 @@
         } else {
             console.log('getUserMedia not supported');
         }
+    </script>
+
+
+
+
+    <script>
+        // Load OpenCV.js library
+        cv.onRuntimeInitialized = () => {
+            // Create video element and canvas to draw on
+            const video = document.getElementById("videoElement");
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+
+            // Set up OpenCV.js video capture
+            const cap = new cv.VideoCapture(video);
+            const src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+            const gray = new cv.Mat(video.height, video.width, cv.CV_8UC1);
+            const dst = new cv.Mat();
+
+            // Set up parameters for square detection
+            const params = {
+                minArea: 100,
+                maxArea: 500,
+                blur: 5,
+                threshold: 150
+            };
+
+            // Start video capture and processing loop
+            setInterval(() => {
+                // Capture video frame and convert to grayscale
+                cap.read(src);
+                cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+
+                // Apply blur and threshold to improve square detection
+                cv.GaussianBlur(gray, gray, { width: params.blur, height: params.blur }, 0, 0, cv.BORDER_DEFAULT);
+                cv.threshold(gray, gray, params.threshold, 255, cv.THRESH_BINARY);
+
+                // Find contours in binary image
+                const contours = new cv.MatVector();
+                const hierarchy = new cv.Mat();
+                cv.findContours(gray, contours, hierarchy, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE);
+
+                // Draw contours on canvas and detect squares
+                for (let i = 0; i < contours.size(); i++) {
+                    const cnt = contours.get(i);
+                    const area = cv.contourArea(cnt);
+
+                    if (area < params.minArea || area > params.maxArea) continue;
+
+                    const perimeter = cv.arcLength(cnt, true);
+                    const approx = new cv.Mat();
+                    cv.approxPolyDP(cnt, approx, 0.04 * perimeter, true);
+
+                    if (approx.size().height == 4) {
+                        // Draw square on canvas
+                        cv.drawContours(dst, contours, i, [255, 0, 0, 255], 2, cv.LINE_8, hierarchy, 0);
+                        const points = [];
+                        for (let j = 0; j < 4; j++) {
+                            points.push({
+                                x: approx.data32S[j * 2],
+                                y: approx.data32S[j * 2 + 1]
+                            });
+                        }
+                        // Do something with the square points
+                        console.log(points);
+                    }
+                }
+
+                // Draw processed image on canvas
+                cv.imshow(canvas, dst);
+            }, 1000 / 30);
+        };
+
     </script>
 </body>
 
