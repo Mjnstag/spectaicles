@@ -29,7 +29,7 @@ KNOWN_DISTANCE = 20
 KNOWN_WIDTH = 16  # cm
 
 # load the reference image and find the reference object in the image
-ref_image = cv2.imread(r"img\test.jfif")
+ref_image = cv2.imread(r"img/test.jfif")
 ref_obj, ref_center = find_stickynote(ref_image)
 ref_width = ref_obj[1][0]
 
@@ -37,7 +37,7 @@ ref_width = ref_obj[1][0]
 focal_length = (ref_width * KNOWN_DISTANCE) / KNOWN_WIDTH
 
 # initialize the video capture object using the default camera
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 # loop over frames from the video stream
 while True:
