@@ -29,7 +29,7 @@ KNOWN_DISTANCE = 20
 KNOWN_WIDTH = 16  # cm
 
 # load the reference image and find the reference object in the image
-ref_image = cv2.imread(r"C:\Users\mjnst\Desktop\spectaicles\img\test.jfif")
+ref_image = cv2.imread(r"\img\test.jfif")
 ref_obj, ref_center = find_stickynote(ref_image)
 ref_width = ref_obj[1][0]
 
