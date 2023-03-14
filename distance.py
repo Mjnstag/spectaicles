@@ -28,7 +28,8 @@ while True:
                 # calculate distance based on known size of object in cm and focal length
                 cv2.putText(img, "Distance: " + str(round((object_size*focalLength/w), ndigits=2)) + " cm",
                             (0, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-
+            else:
+                img = cv2.drawContours(img, [cnt], -1, (0, 0, 255), 3)
     cv2.imshow("Shapes", img)
     key = cv2.waitKey(15)
     # ESC key
