@@ -1,0 +1,23 @@
+{
+  "name": "spectaicles",
+  "version": "1.0.0",
+  "description": "Github repository for the UvA's information studies course \"Societal Complexity and Designing with Data\".",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mjnstag/spectaicles.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mjnstag/spectaicles/issues"
+  },
+  "homepage": "https://github.com/Mjnstag/spectaicles#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
