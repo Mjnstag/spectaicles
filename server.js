@@ -18,6 +18,10 @@ app.get('/connect', (req, res) => {
   res.render('./pages/connect')
 })
 
+app.get('/webcam', (req, res) => {
+  res.render('./pages/webcam')
+})
+
 /* Start the server */
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
