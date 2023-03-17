@@ -22,6 +22,10 @@ app.get('/webcam', (req, res) => {
   res.render('./pages/webcam')
 })
 
+app.get('/webcam2', (req, res) => {
+  res.render('./pages/webcam2')
+})
+
 /* Start the server */
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
