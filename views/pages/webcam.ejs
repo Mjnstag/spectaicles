@@ -4,120 +4,118 @@
 <%- include('../partials/head'); %>
 
 
-<body>
-    <h1>OpenCV Camera</h1>
-    <div>
-        <button id="actionBtn">Start</button>
-    </div>
-    <video id="video" width="300" height="225"></video>
-    <canvas id="canvasOutput"></canvas>
-    <script async src="https://docs.opencv.org/4.5.4/opencv.js" type="text/javascript" onload="onCvLoaded();"></script>
-    <script>
-        function onCvLoaded() {
-            console.log('cv', cv);
-            cv.onRuntimeInitialized = onReady;
-        }
-        const video = document.getElementById('video');
-        const actionBtn = document.getElementById('actionBtn');
-        const width = 300;
-        const height = 225;
-        const FPS = 30;
-        let stream;
-        let streaming = false;
-        function onReady() {
-            let src;
-            let dst;
-            const cap = new cv.VideoCapture(video);
+    <body>
+        <h1>OpenCV Camera</h1>
+        <div>
+            <button id="actionBtn">Start</button>
+        </div>
+        <video id="video" width="300" height="225"></video>
+        <canvas id="canvasOutput"></canvas>
+        <script async src="https://docs.opencv.org/4.5.4/opencv.js" type="text/javascript"
+            onload="onCvLoaded();"></script>
+        <script>
+            function onCvLoaded() {
+                console.log('cv', cv);
+                cv.onRuntimeInitialized = onReady;
+            }
+            const video = document.getElementById('video');
+            const actionBtn = document.getElementById('actionBtn');
+            const width = 300;
+            const height = 225;
+            const FPS = 30;
+            let stream;
+            let streaming = false;
+            function onReady() {
+                let src;
+                let dst;
+                const cap = new cv.VideoCapture(video);
 
-            actionBtn.addEventListener('click', () => {
-                if (streaming) {
-                    stop();
-                    actionBtn.textContent = 'Start';
-                } else {
-                    start();
-                    actionBtn.textContent = 'Stop';
+                actionBtn.addEventListener('click', () => {
+                    if (streaming) {
+                        stop();
+                        actionBtn.textContent = 'Start';
+                    } else {
+                        start();
+                        actionBtn.textContent = 'Stop';
+                    }
+                });
+
+                function start() {
+                    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+                        .then(_stream => {
+                            stream = _stream;
+                            console.log('stream', stream);
+                            video.srcObject = stream;
+                            video.play();
+                            streaming = true;
+                            src = new cv.Mat(height, width, cv.CV_8UC4);
+                            // gray = new cv.Mat(height, width, cv.CV_8UC1);
+                            // blurred = new cv.Mat(height, width, cv.CV_8UC1);
+                            // canny = new cv.Mat(height, width, cv.CV_8UC1);
+                            // contours = new cv.MatVector();
+                            // hierarchy = new cv.Mat(height, width, cv.CV_8UC1);
+                            // dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+
+                            setTimeout(processVideo, 0)
+                        })
+                        .catch(err => console.log(`An error occurred: ${err}`));
                 }
-            });
 
-            function start() {
-                navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-                    .then(_stream => {
-                        stream = _stream;
-                        console.log('stream', stream);
-                        video.srcObject = stream;
-                        video.play();
-                        streaming = true;
-                        src = new cv.Mat(height, width, cv.CV_8UC4);
-                        gray = new cv.Mat(height, width, cv.CV_8UC1);
-                        blurred = new cv.Mat(height, width, cv.CV_8UC1);
-                        canny = new cv.Mat(height, width, cv.CV_8UC1);
-                        contours = new cv.MatVector();
-                        hierarchy = new cv.Mat(height, width, cv.CV_8UC1);
-                        dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+                function stop() {
+                    if (video) {
+                        video.pause();
+                        video.srcObject = null;
+                    }
+                    if (stream) {
+                        stream.getVideoTracks()[0].stop();
+                    }
+                    streaming = false;
+                }
+
+                function processVideo() {
+                    if (!streaming) {
+                        src.delete();
+                        gray.delete();
+                        blurred.delete();
+                        canny_output.delete();
+                        contours.delete();
+                        hierarchy.delete();
+                        dst.delete();
+                        return;
+                    }
+                    const begin = Date.now();
+                    cap.read(src)
+
+                    let ksize = new cv.Size(3, 3);
+                    var canny_output = new cv.Mat();
+                    var blurred = new cv.Mat();
+                    let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+                    var cthresh = 75;
+                    var gray = new cv.Mat();
 
 
+                    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+                    cv.blur(gray, blurred, ksize);
 
+                    cv.Canny(blurred, canny_output, cthresh, cthresh * 2, 3, 0);
 
+                    var contours = new cv.MatVector();
+                    var hierarchy = new cv.Mat();
+                    cv.findContours(canny_output, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
 
+                    for (let i = 0; i < contours.size(); ++i) {
+                        let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255),
+                            Math.round(Math.random() * 255));
+                        cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
+                    }
 
-                        
-                        setTimeout(processVideo, 0)
-                    })
-                    .catch(err => console.log(`An error occurred: ${err}`));
+                    cv.imshow('canvasOutput', dst);
+                    const delay = 1000 / FPS - (Date.now() - begin);
+                    setTimeout(processVideo, delay);
+                }
             }
 
-            function stop() {
-                if (video) {
-                    video.pause();
-                    video.srcObject = null;
-                }
-                if (stream) {
-                    stream.getVideoTracks()[0].stop();
-                }
-                streaming = false;
-            }
+        </script>
+    </body>
 
-            function processVideo() {
-                if (!streaming) {
-                    src.delete();
-                    gray.delete();
-                    blurred.delete();
-                    canny.delete();
-                    contours.delete();
-                    hierarchy.delete();
-                    dst.delete();
-                    return;
-                }
-                const begin = Date.now();
-                cap.read(src)
-
-
-                let ksize = new cv.Size(3, 3);
-                cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
-                cv.GaussianBlur(gray, blurred, ksize, 0, 0, cv.BORDER_DEFAULT);
-                // cv.Canny(blurred, canny, 50, 100, 3, false);
-                cv.findContours(blurred, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
-                for (let i = 0; i < contours.size(); ++i) {
-                    let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255),
-                                Math.round(Math.random() * 255));
-                    cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
-                        }
-
-                // cv.findContours(src, dst);
-
-
-
-                // You can try more different parameters
-
-
-                // cv.findContours(src, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
-
-                cv.imshow('canvasOutput', dst);
-                const delay = 1000 / FPS - (Date.now() - begin);
-                setTimeout(processVideo, delay);
-            }
-        }
-
-    </script>
-</body>
 </html>
