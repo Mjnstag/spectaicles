@@ -126,15 +126,13 @@
                             if (Math.abs(aspectRatio - 1) < 0.1) { // Keep only rectangles with aspect ratio close to 1
                                 cv.drawContours(dst, poly, i, color, 1, cv.LINE_8, hierarchy, 100);
 
-                                // // Get the bounding rectangle for the contour
-                                // let dimensions_text = `${rect.width} x ${rect.height}`
-                                // // Log the dimensions of the bounding rectangle
-                                // let pos = { x: 0, y: 10 };
-                                // if (contours.size() === 1) {
-                                //     cv.putText(dst, dimensions_text, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
-                                //     console.log(dimensions_text);
-                                // }
-
+                                // Get the bounding rectangle for the contour
+                                let dimensions_text = `${rect.width} x ${rect.height}`
+                                // Log the dimensions of the bounding rectangle
+                                let pos = { x: 0, y: 10 };
+                                cv.putText(dst, dimensions_text, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
+                                console.log(dimensions_text);
+                            
 
                         }
                     }
