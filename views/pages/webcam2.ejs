@@ -90,14 +90,16 @@
                     var canny_output = new cv.Mat();
                     var blurred = new cv.Mat();
                     let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
-                    var cthresh = 250;
+                    var cthresh = 500;
                     var gray = new cv.Mat();
+                    var threshImage = new cv.Mat();
 
 
                     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
                     cv.blur(gray, blurred, ksize);
+                    cv.threshold(blurred, threshImage, 128, 255, cv.THRESH_BINARY);
 
-                    cv.Canny(blurred, canny_output, cthresh, cthresh * 2, 3, 0);
+                    cv.Canny(threshImage, canny_output, cthresh, cthresh * 2, 3, 0);
 
                     var contours = new cv.MatVector();
                     var hierarchy = new cv.Mat();
@@ -114,17 +116,32 @@
 
                     for (let i = 0; i < contours.size(); ++i) {
                         let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.round(Math.random() * 255));
-                        cv.drawContours(dst, poly, i, color, 1, cv.LINE_8, hierarchy, 100);
+                        let tmp = new cv.Mat();
+                        let cnt = contours.get(i);
+                        
+                        cv.approxPolyDP(cnt, tmp, 0.02 * cv.arcLength(cnt, true), true);
+                        if (tmp.rows === 4) {
+                            let rect = cv.boundingRect(tmp);
+                            let aspectRatio = rect.width / rect.height;
+                            if (Math.abs(aspectRatio - 1) < 0.1) { // Keep only rectangles with aspect ratio close to 1
+                                cv.drawContours(dst, poly, i, color, 1, cv.LINE_8, hierarchy, 100);
 
-                        // Get the bounding rectangle for the contour
-                        let rect = cv.boundingRect(contours.get(i));
-                        let dimensions_text = `${rect.width} x ${rect.height}`
-                        // Log the dimensions of the bounding rectangle
-                        let pos = { x: 0, y: 10 };
-                        if (contours.size() === 1) {
-                            cv.putText(dst, dimensions_text, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
-                            console.log(dimensions_text);
+                                // // Get the bounding rectangle for the contour
+                                // let dimensions_text = `${rect.width} x ${rect.height}`
+                                // // Log the dimensions of the bounding rectangle
+                                // let pos = { x: 0, y: 10 };
+                                // if (contours.size() === 1) {
+                                //     cv.putText(dst, dimensions_text, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
+                                //     console.log(dimensions_text);
+                                // }
+
+
                         }
+                    }
+                        cnt.delete(); tmp.delete();
+
+
+                       
                     }
 
 
