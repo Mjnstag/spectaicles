@@ -6,6 +6,9 @@
 
     <body>
         <h1>OpenCV Camera</h1>
+
+        <p id="distanceNudge"></p>
+
         <div>
             <button id="actionBtn">Start</button>
         </div>
@@ -75,6 +78,11 @@
                         stream.getVideoTracks()[0].stop();
                     }
                     streaming = false;
+                }
+
+                function updateDistance(nudge) {
+                    let distanceNudge = document.getElementById('distanceNudge');
+                    distanceNudge.innerHTML = `${nudge}`;
                 }
 
                 function processVideo() {
@@ -200,12 +208,15 @@
 
                     switch (current) {
                         case 'far':
+                            distanceNudge("Please move closer");
                             cv.putText(dst, `Move closer`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
                             break;
                         case 'close':
+                            distanceNudge("Please move further away");
                             cv.putText(dst, `Move further away`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
                             break;
                         case 'correct':
+                            distanceNudge("Correct position!");
                             cv.putText(dst, `Correct position!`, { x: 170, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(0, 255, 0), 1);
                             break;
                     }
