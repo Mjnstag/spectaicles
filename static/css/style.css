@@ -1,5 +1,44 @@
+:root {
+  --primary: #080b3a;
+  --secondary: #6bd5b7;
+  --white: #fff;
+}
+
 body {
-  font-family: sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   background: #060b3a;
   color: white;
+}
+
+.flex-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.gradient {
+  background: linear-gradient(180deg, rgba(8, 11, 58, 1) 65%, rgba(107, 213, 183, 1) 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Stack owl selector https: //every-layout.dev/layouts/stack/ */
+
+form>*+* {
+  margin-block-start: 1rem;
+}
+
+input {
+  width: 70vw;
+  border-radius: 3em;
+  padding: 1em;
 }
