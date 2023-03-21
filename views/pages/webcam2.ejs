@@ -167,29 +167,33 @@
                                     avg = (sum / tempArray.length)
                                     if ((array_distance - avg < 0.1) && (array_distance - avg > -0.1)) {
                                         distanceArray = tempArray
+
+
+                                        cv.putText(dst, `${distance} m`, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
+
+                                        if (distance*100 > testDistance + safeMargin)
+                                        {
+                                        cv.putText(dst, `Move closer`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
+                                        }
+
+                                        else if (distance*100 < testDistance - safeMargin)
+                                        {
+                                        cv.putText(dst, `Move further away`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
+                                        }
+
+                                        else
+                                        {
+                                        cv.putText(dst, `Correct position!`, { x: 170, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(0, 255, 0), 1);
+                                        }
+
+
+
                                     }
                                 }
                                 
                                 // console.log(distanceArray)
                                 
                                 
-
-                                cv.putText(dst, `${distance} m`, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
-
-                                if (distance*100 > testDistance + safeMargin)
-                                {
-                                cv.putText(dst, `Move closer`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
-                                }
-
-                                else if (distance*100 < testDistance - safeMargin)
-                                {
-                                cv.putText(dst, `Move further away`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
-                                }
-
-                                else
-                                {
-                                cv.putText(dst, `Correct position!`, { x: 170, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(0, 255, 0), 1);
-                                }
 
                                 // console.log(distance);
 
