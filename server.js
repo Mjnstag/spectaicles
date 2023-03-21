@@ -34,6 +34,26 @@ app.get('/webcam2', (req, res) => {
   res.render('./pages/webcam2')
 })
 
+/* Test routes */
+
+app.get('/test-device', (req, res) => {
+  res.render('./pages/test-device')
+})
+
+app.get('/test-bluetooth', (req, res) => {
+  res.render('./pages/test-bluetooth')
+})
+
+app.get('/test-eye', (req, res) => {
+  res.render('./pages/test-eye')
+})
+
+app.get('/test-turn', (req, res) => {
+  res.render('./pages/test-turn')
+})
+
+
+
 /* Start the server */
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

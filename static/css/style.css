@@ -8,6 +8,13 @@ body {
   font-family: 'Ubuntu', sans-serif;
   background: #060b3a;
   color: white;
+  margin: 0;
+  padding: 0;
+}
+
+h2 {
+  font-size: 2em;
+  font-weight: normal;
 }
 
 .flex-center {
@@ -41,4 +48,142 @@ input {
   width: 70vw;
   border-radius: 3em;
   padding: 1em;
+}
+
+nav {
+  background: #7498f0;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 8vh;
+}
+
+nav h1 {
+  margin: 0;
+  padding: 0;
+}
+
+nav button {
+  background: white;
+  border: none;
+  border-radius: 100%;
+  height: 4vh;
+  width: 4vh;
+  position: absolute;
+  right: 15px;
+}
+
+nav button svg {
+  transform: translateX(-3px);
+}
+
+.bluetooth {
+  height: 8em;
+  width: 8em;
+  background: #74cac4;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bluetooth svg {
+  height: 5em;
+  width: 5em;
+  display: block;
+  fill: white;
+}
+
+main div {
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.button {
+  background: var(--secondary);
+  color: white;
+  text-decoration: none;
+  padding: 0.5em 1em;
+  border-radius: 2em;
+}
+
+.tests {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 0;
+}
+
+.tests span {
+  margin-right: 1em;
+}
+
+.eyes {
+  list-style-type: none;
+  display: flex;
+  padding-left: 0;
+}
+
+.eyes svg {
+  margin-right: 0.5em;
+  width: 4em;
+  height: 4em;
+}
+
+.eyes li {
+  display: flex;
+  flex-direction: column;
+  margin: 2em;
+}
+
+.eyes li a {
+  text-decoration: none;
+  color: white;
+}
+
+.turn svg {
+  width: 4em;
+  height: 4em;
+  fill: white;
+}
+
+.turn {
+  opacity: 0;
+  animation: show ease 3s forwards, hide ease 3s 5s forwards;
+}
+
+.eye {
+  opacity: 0;
+  animation: show ease 3s 8s forwards, hide ease 3s 13s forwards;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hide {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    display: none;
+  }
 }
