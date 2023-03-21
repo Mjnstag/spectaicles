@@ -24,6 +24,8 @@
             const height = 225;
             const FPS = 20;
             let distanceArray = [];
+            var curdist = null;
+            var current;
             let stream;
             let streaming = false;
             let sum = 0;
@@ -110,7 +112,7 @@
                     var contours = new cv.MatVector();
                     var hierarchy = new cv.Mat();
                     let poly = new cv.MatVector();
-                    
+
                     cv.findContours(canny_output, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
 
                     for (let i = 0; i < contours.size(); ++i) {
@@ -119,15 +121,17 @@
                         cv.approxPolyDP(cnt, tmp, 10, true);
                         poly.push_back(tmp);
                         cnt.delete(); tmp.delete();
-                        }
+                    }
+
+
 
                     for (let i = 0; i < contours.size(); ++i) {
                         let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.round(Math.random() * 255));
                         let tmp = new cv.Mat();
                         let cnt = contours.get(i);
-                       
-                        
-                        
+
+
+
                         cv.approxPolyDP(cnt, tmp, 0.02 * cv.arcLength(cnt, true), true);
                         if (tmp.rows === 4) {
                             let rect = cv.boundingRect(tmp);
@@ -169,42 +173,42 @@
                                         distanceArray = tempArray
 
 
-                                        cv.putText(dst, `${distance} m`, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
+                                        curdist = distance;
 
-                                        if (distance*100 > testDistance + safeMargin)
-                                        {
-                                        cv.putText(dst, `Move closer`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
+
+                                        if (distance * 100 > testDistance + safeMargin) {
+                                            current = 'far';
                                         }
 
-                                        else if (distance*100 < testDistance - safeMargin)
-                                        {
-                                        cv.putText(dst, `Move further away`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
+                                        else if (distance * 100 < testDistance - safeMargin) {
+                                            current = 'close';
                                         }
 
-                                        else
-                                        {
-                                        cv.putText(dst, `Correct position!`, { x: 170, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(0, 255, 0), 1);
+                                        else {
+                                            current = 'correct';
                                         }
-
-
-
                                     }
                                 }
-                                
-                                // console.log(distanceArray)
-                                
-                                
-
-                                // console.log(distance);
-
+                            }
                         }
-                    }
+
                         cnt.delete(); tmp.delete();
 
-
-                       
                     }
 
+                    cv.putText(dst, `${curdist} m`, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
+
+                    switch (current) {
+                        case 'far':
+                            cv.putText(dst, `Move closer`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
+                            break;
+                        case 'close':
+                            cv.putText(dst, `Move further away`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
+                            break;
+                        case 'correct':
+                            cv.putText(dst, `Correct position!`, { x: 170, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(0, 255, 0), 1);
+                            break;
+                    }
 
                     cv.imshow('canvasOutput', dst);
                     const delay = 1000 / FPS - (Date.now() - begin);
