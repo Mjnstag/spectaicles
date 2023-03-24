@@ -52,6 +52,39 @@ app.get('/test-turn', (req, res) => {
   res.render('./pages/test-turn')
 })
 
+/* Mobile routes */
+app.get('/mobile/login', (req, res) => {
+  res.render('./pages/mobile/loginpage')
+})
+
+app.get('/mobile/signup', (req, res) => {
+  res.render('./pages/mobile/signup_page')
+})
+
+app.get('/mobile/forgot', (req, res) => {
+  res.render('./pages/mobile/forgot_page')
+})
+
+app.get('/mobile/onboard_1', (req, res) => {
+  res.render('./pages/mobile/onboard_1')
+})
+
+app.get('/mobile/onboard_2', (req, res) => {
+  res.render('./pages/mobile/onboard_2')
+})
+
+app.get('/mobile/onboard_3', (req, res) => {
+  res.render('./pages/mobile/onboard_3')
+})
+
+app.get('/mobile/onboard_4', (req, res) => {
+  res.render('./pages/mobile/onboard_4')
+})
+
+app.get('/mobile/onboard_5', (req, res) => {
+  res.render('./pages/mobile/onboard_5')
+})
+
 
 
 /* Start the server */
