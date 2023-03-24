@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('../partials/head'); %>
+
+
+    <body>
+        <h1>OpenCV Camera</h1>
+
+        <img hidden id="base_img" src="/img/test_image.png" />
+        <img hidden id="subset_img" src="/img/red_square.png" />
+        <!-- <canvas id="canvasInput"></canvas> -->
+        <canvas id="canvasOutput"></canvas>
+        <script async src="https://docs.opencv.org/4.5.4/opencv.js" type="text/javascript"
+            onload="onCvLoaded();"></script>
+        <script>
+            function onCvLoaded() {
+                console.log('cv', cv);
+                cv.onRuntimeInitialized = onReady;
+            }
+            const video = document.getElementById('video');
+            const actionBtn = document.getElementById('actionBtn');
+            const width = 300;
+            const height = 225;
+            const FPS = 20;
+            let stream;
+            let streaming = false;
+            function onReady() {
+                let src = cv.imread('base_img');
+                let templ = cv.imread('subset_img');
+
+                // cv.imshow('canvasInput', src);
+
+                let dst = new cv.Mat();
+                let mask = new cv.Mat();
+                cv.matchTemplate(src, templ, dst, cv.TM_CCOEFF, mask);
+
+                let result = cv.minMaxLoc(dst, mask);
+                let maxPoint = result.maxLoc;
+                let color = new cv.Scalar(255, 0, 0, 255);
+                let point = new cv.Point(maxPoint.x + templ.cols, maxPoint.y + templ.rows);
+                cv.rectangle(src, maxPoint, point, color, 2, cv.LINE_8, 0);
+                cv.imshow('canvasOutput', src);
+                src.delete(); dst.delete(); mask.delete();
+
+            }
+
+        </script>
+    </body>
+
+</html>
