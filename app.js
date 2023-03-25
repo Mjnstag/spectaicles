@@ -34,6 +34,11 @@ app.get('/webcam2', (req, res) => {
   res.render('./pages/webcam2')
 })
 
+app.get('/webcam3', (req, res) => {
+  res.render('./pages/webcam3')
+})
+
+
 /* Test routes */
 
 app.get('/test-device', (req, res) => {
