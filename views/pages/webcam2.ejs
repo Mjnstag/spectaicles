@@ -4,16 +4,21 @@
 <%- include('../partials/head'); %>
 
 
-    <body>
-        <h1>OpenCV Camera</h1>
+    <body class="flex-center gradient"></body>
+        <h1>Distance Calculation</h1>
 
-        <p id="distanceNudge">Calculating distance in progress...</p>
+        <p id="distanceNudge">Follow the instructions below, to set up your eye-test correctly.</p>
 
+        <img id="base_img" src="/img/instructions.png">
+        <br>
+        <p id="distanceText">Press start to begin, then keep the square image approximately 1 meter away from the camera.</p>
+        <br>
         <div>
-            <button id="actionBtn">Start</button>
+            <button class="loginpage-button button" id="actionBtn">Start</button>
         </div>
-        <video id="video" width="300" height="225"></video>
-        <canvas id="canvasOutput"></canvas>
+        <br>
+        <video hidden id="video" width="300" height="225"></video>
+        <canvas hidden id="canvasOutput"></canvas>
         <script async src="https://docs.opencv.org/4.5.4/opencv.js" type="text/javascript"
             onload="onCvLoaded();"></script>
         <script>
@@ -57,6 +62,10 @@
                             video.play();
                             streaming = true;
                             src = new cv.Mat(height, width, cv.CV_8UC4);
+                            let distanceText = document.getElementById('distanceText');
+                            distanceText.innerText = "Keep the square image approximately 1 meter away from the camera.";
+                            
+
                             // gray = new cv.Mat(height, width, cv.CV_8UC1);
                             // blurred = new cv.Mat(height, width, cv.CV_8UC1);
                             // canny = new cv.Mat(height, width, cv.CV_8UC1);
@@ -70,6 +79,8 @@
                 }
 
                 function stop() {
+                    let distanceText = document.getElementById('distanceText');
+                    distanceText.innerText = "Press start to begin, then keep the square image approximately 1 meter away from the camera.";
                     if (video) {
                         video.pause();
                         video.srcObject = null;
@@ -82,7 +93,6 @@
 
                 function updateDistance(nudge) {
                     let distanceNudge = document.getElementById('distanceNudge');
-
                     if (distanceNudge.innerText !== nudge) {
                         distanceNudge.innerText = nudge;
                     }
@@ -164,7 +174,7 @@
                                 pixelSize = (rect.width)
 
                                 // desired distance to object
-                                const testDistance = 100
+                                const testDistance = 50
                                 const safeMargin = 20
 
                                 // Log the dimensions of the bounding rectangle
@@ -219,7 +229,7 @@
                             cv.putText(dst, `Move further away`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
                             break;
                         case 'correct':
-                            updateDistance("Correct position!");
+                            updateDistance("Correct position! Hold current position throughout the test.");
                             cv.putText(dst, `Correct position!`, { x: 170, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(0, 255, 0), 1);
                             break;
                     }
@@ -231,6 +241,12 @@
             }
 
         </script>
+        <footer class="loginpage-footer">
+            <span class="loginpage-text4">Spectaicles</span>
+            <span class="loginpage-text5">
+              © 2023&nbsp;Spectaicles All Rights Reserved.
+            </span>
+          </footer>
     </body>
 
 </html>
