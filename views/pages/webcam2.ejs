@@ -19,8 +19,8 @@
         <button class="loginpage-button button" id="actionBtn">Start</button>
     </div>
     <br>
-    <video hidden id="video" width="300" height="225"></video>
-    <canvas hidden id="canvasOutput"></canvas>
+    <video id="video" width="300" height="225"></video>
+    <canvas id="canvasOutput"></canvas>
     <script async src="https://docs.opencv.org/4.5.4/opencv.js" type="text/javascript" onload="onCvLoaded();"></script>
     <script>
         function onCvLoaded() {
@@ -186,7 +186,7 @@
 
                             // original square object size
                             // Just a variable to test
-                            const objectSize = 9
+                            const objectSize = 7.8
 
                             pixelSize = (rect.width)
 
