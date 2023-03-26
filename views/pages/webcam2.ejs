@@ -53,8 +53,22 @@
                 console.log(event.keyCode);
                 // Enter key
                 if (event.keyCode === 13) {
-                    console.log('Clicked');
+                    console.log('Clicked enter');
                     keypress();
+                }
+                // space key
+                else if (event.keyCode === 32) {
+                    console.log('Clicked space');
+
+                    if (distanceNudge.innerText === "Correct position! Hold current position throughout the test.") {
+                        console.log('moving to eye test');
+                        if (streaming) {
+                            keypress();
+                        }
+                        window.location.href = "/test-eye"
+
+                    }
+
                 }
             };
 
