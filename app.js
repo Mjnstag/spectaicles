@@ -70,26 +70,98 @@ app.get('/mobile/forgot', (req, res) => {
   res.render('./pages/mobile/forgot_page')
 })
 
+/* Mobile Onboarding */
 app.get('/mobile/onboard_1', (req, res) => {
-  res.render('./pages/mobile/onboard_1')
+  res.render('./pages/mobile/onboard/onboard_1')
 })
 
 app.get('/mobile/onboard_2', (req, res) => {
-  res.render('./pages/mobile/onboard_2')
+  res.render('./pages/mobile/onboard/onboard_2')
 })
 
 app.get('/mobile/onboard_3', (req, res) => {
-  res.render('./pages/mobile/onboard_3')
+  res.render('./pages/mobile/onboard/onboard_3')
 })
 
 app.get('/mobile/onboard_4', (req, res) => {
-  res.render('./pages/mobile/onboard_4')
+  res.render('./pages/mobile/onboard/onboard_4')
 })
 
 app.get('/mobile/onboard_5', (req, res) => {
-  res.render('./pages/mobile/onboard_5')
+  res.render('./pages/mobile/onboard/onboard_5')
 })
 
+/* Mobile Menu */
+
+app.get('/mobile/menu_1', (req, res) => {
+  res.render('./pages/mobile/test_menu/menu_1')
+})
+
+app.get('/mobile/menu_2', (req, res) => {
+  res.render('./pages/mobile/test_menu/menu_2')
+})
+
+app.get('/mobile/menu_3', (req, res) => {
+  res.render('./pages/mobile/test_menu/menu_3')
+})
+
+app.get('/mobile/menu_complete', (req, res) => {
+  res.render('./pages/mobile/test_menu/completed_menu')
+})
+
+app.get('/mobile/report', (req, res) => {
+  res.render('./pages/mobile/test_menu/report')
+})
+
+/* Mobile Test Pages */
+
+app.get('/mobile/test_1', (req, res) => {
+  res.render('./pages/mobile/test_pages/test_1_c16')
+})
+
+app.get('/mobile/test_2', (req, res) => {
+  res.render('./pages/mobile/test_pages/test_2_c17')
+})
+
+app.get('/mobile/test_3', (req, res) => {
+  res.render('./pages/mobile/test_pages/test_3_c18')
+})
+
+app.get('/mobile/test_4', (req, res) => {
+  res.render('./pages/mobile/test_pages/test_4_c20')
+})
+
+app.get('/mobile/test_5', (req, res) => {
+  res.render('./pages/mobile/test_pages/test_5_c21')
+})
+
+app.get('/mobile/test_6', (req, res) => {
+  res.render('./pages/mobile/test_pages/test_6_c22')
+})
+
+app.get('/mobile/turn_right', (req, res) => {
+  res.render('./pages/mobile/test_pages/turn_right')
+})
+
+app.get('/mobile/test_7', (req, res) => {
+  res.render('./pages/mobile/test_pages/test_7_c24')
+})
+
+app.get('/mobile/test_8', (req, res) => {
+  res.render('./pages/mobile/test_pages/test_8_c25')
+})
+
+app.get('/mobile/test_9', (req, res) => {
+  res.render('./pages/mobile/test_pages/test_9_c26')
+})
+
+app.get('/mobile/test_10', (req, res) => {
+  res.render('./pages/mobile/test_pages/test_10_c27')
+})
+
+app.get('/mobile/test_result', (req, res) => {
+  res.render('./pages/mobile/test_pages/test_result_c28')
+})
 
 
 /* Start the server */
