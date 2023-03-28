@@ -1,0 +1,25 @@
+.test-view16-container2,
+.test-view20-container2 {
+  display: flex !important;
+  justify-content: space-around !important;
+  align-items: flex-start !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  transform: translateY(-1em);
+}
+
+.test-view16-container3,
+.test-view16-container4,
+.test-view16-container5 {
+  transform: rotate(0deg) !important;
+  width: 175px !important;
+}
+
+.test-view20-container3,
+.test-view20-container4,
+.test-view20-container5,
+.test-view20-container6 {
+  transform: rotate(0deg) !important;
+  width: 150px !important;
+  margin-right: -1em;
+}
