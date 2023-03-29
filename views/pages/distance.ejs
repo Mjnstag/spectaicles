@@ -43,6 +43,7 @@
       }
       const video = document.getElementById('video');
       const actionBtn = document.getElementById('actionBtn');
+      const button_keycodes = [72, 86, 68, 90, 75, 67]; // h, v, d, z, k, c
       const width = 300;
       const height = 225;
       const FPS = 20;
@@ -71,7 +72,7 @@
             keypress();
           }
           // space key
-          else if (event.keyCode === 32) {
+          else if (button_keycodes.includes(event.keyCode)) {
             console.log('Clicked space');
 
             /* uncomment to have check if distance is correct */
