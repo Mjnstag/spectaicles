@@ -60,13 +60,19 @@
                 else if (event.keyCode === 32) {
                     console.log('Clicked space');
 
-                    if (distanceNudge.innerText === "Correct position! Hold current position throughout the test. Press any key on the device to start the test.") {
-                        console.log('moving to eye test');
-                        if (streaming) {
-                            keypress();
-                        }
-                        window.location.href = "/test-turn"
+                    /* uncomment to have check if distance is correct */
+                    // if (distanceNudge.innerText === "Correct position! Hold current position throughout the test. Press any key on the device to start the test.") {
+                    //     console.log('moving to eye test');
+                    //     if (streaming) {
+                    //         keypress();
+                    //     }
+                    //     window.location.href = "/test-turn"
+                    // }
+                    console.log('moving to eye test');
+                    if (streaming) {
+                        keypress();
                     }
+                    window.location.href = "/test-turn"
                 }
             };
 
