@@ -4,274 +4,288 @@
 <%- include('../partials/head'); %>
 
 
-    <body class="flex-center gradient"></body>
-    <h1>Distance Calculation</h1>
+  <body class="flex-center gradient">
+    <nav>
+      <h1>Farsightedness test</h1>
+      <button><svg 2 width="24" 3 height="24" 4 viewBox="0 0 24 24" 5 fill="none" 6 xmlns="http://www.w3.org/2000/svg"
+          7>
+          8
+          <path 9
+            d="M6.2253 4.81108C5.83477 4.42056 5.20161 4.42056 4.81108 4.81108C4.42056 5.20161 4.42056 5.83477 4.81108 6.2253L10.5858 12L4.81114 17.7747C4.42062 18.1652 4.42062 18.7984 4.81114 19.1889C5.20167 19.5794 5.83483 19.5794 6.22535 19.1889L12 13.4142L17.7747 19.1889C18.1652 19.5794 18.7984 19.5794 19.1889 19.1889C19.5794 18.7984 19.5794 18.1652 19.1889 17.7747L13.4142 12L19.189 6.2253C19.5795 5.83477 19.5795 5.20161 19.189 4.81108C18.7985 4.42056 18.1653 4.42056 17.7748 4.81108L12 10.5858L6.2253 4.81108Z"
+            10 fill="currentColor" 11 />
+          12
+        </svg></button>
+    </nav>
+    <main class="flex-center distance">
 
-    <p id="distanceNudge">Follow the instructions below, to set up your eye-test correctly.</p>
+      <h1>Distance Calculation</h1>
 
-    <img id="base_img" src="/img/instructions.png">
-    <br>
-    <p id="distanceText">Press start on the screen or ENTER on the device to begin, then keep the square image
+      <p id="distanceNudge">Follow the instructions below, to set up your eye-test correctly.</p>
+
+      <img id="base_img" src="/img/instructions.png">
+      <br>
+      <p id="distanceText">Press start on the screen or ENTER on the device to begin, then keep the square image
         approximately 1 meter away from the camera.
-    </p>
-    <br>
-    <div>
+      </p>
+      <br>
+      <div>
         <button class="loginpage-button button" id="actionBtn">Start</button>
-    </div>
-    <br>
-    <video hidden id="video" width="300" height="225"></video>
-    <canvas hidden id="canvasOutput"></canvas>
+      </div>
+      <br>
+      <video hidden id="video" width="300" height="225"></video>
+      <canvas hidden id="canvasOutput"></canvas>
+    </main>
     <script async src="https://docs.opencv.org/4.5.4/opencv.js" type="text/javascript" onload="onCvLoaded();"></script>
     <script>
-        function onCvLoaded() {
-            console.log('cv', cv);
-            cv.onRuntimeInitialized = onReady;
+      function onCvLoaded() {
+        console.log('cv', cv);
+        cv.onRuntimeInitialized = onReady;
+      }
+      const video = document.getElementById('video');
+      const actionBtn = document.getElementById('actionBtn');
+      const width = 300;
+      const height = 225;
+      const FPS = 20;
+      let distanceArray = [];
+      var curdist = null;
+      var current;
+      let stream;
+      let streaming = false;
+      let sum = 0;
+      let avg = 0;
+      function onReady() {
+        let src;
+        const cap = new cv.VideoCapture(video);
+
+        actionBtn.addEventListener('click', () => {
+          keypress();
+        });
+
+        document.addEventListener('keydown', keyCheck)
+
+        function keyCheck(event) {
+          console.log(event.keyCode);
+          // Enter key
+          if (event.keyCode === 13) {
+            console.log('Clicked enter');
+            keypress();
+          }
+          // space key
+          else if (event.keyCode === 32) {
+            console.log('Clicked space');
+
+            /* uncomment to have check if distance is correct */
+            // if (distanceNudge.innerText === "Correct position! Hold current position throughout the test. Press any key on the device to start the test.") {
+            //     console.log('moving to eye test');
+            //     if (streaming) {
+            //         keypress();
+            //     }
+            //     window.location.href = "/test-turn"
+            // }
+            console.log('moving to eye test');
+            if (streaming) {
+              keypress();
+            }
+            window.location.href = "/test-turn"
+          }
+        };
+
+        function keypress() {
+          if (streaming) {
+            stop();
+            actionBtn.textContent = 'Start';
+          } else {
+            start();
+            actionBtn.textContent = 'Stop';
+          }
         }
-        const video = document.getElementById('video');
-        const actionBtn = document.getElementById('actionBtn');
-        const width = 300;
-        const height = 225;
-        const FPS = 20;
-        let distanceArray = [];
-        var curdist = null;
-        var current;
-        let stream;
-        let streaming = false;
-        let sum = 0;
-        let avg = 0;
-        function onReady() {
-            let src;
-            const cap = new cv.VideoCapture(video);
 
-            actionBtn.addEventListener('click', () => {
-                keypress();
-            });
-
-            document.addEventListener('keydown', keyCheck)
-
-            function keyCheck(event) {
-                console.log(event.keyCode);
-                // Enter key
-                if (event.keyCode === 13) {
-                    console.log('Clicked enter');
-                    keypress();
-                }
-                // space key
-                else if (event.keyCode === 32) {
-                    console.log('Clicked space');
-
-                    /* uncomment to have check if distance is correct */
-                    // if (distanceNudge.innerText === "Correct position! Hold current position throughout the test. Press any key on the device to start the test.") {
-                    //     console.log('moving to eye test');
-                    //     if (streaming) {
-                    //         keypress();
-                    //     }
-                    //     window.location.href = "/test-turn"
-                    // }
-                    console.log('moving to eye test');
-                    if (streaming) {
-                        keypress();
-                    }
-                    window.location.href = "/test-turn"
-                }
-            };
-
-            function keypress() {
-                if (streaming) {
-                    stop();
-                    actionBtn.textContent = 'Start';
-                } else {
-                    start();
-                    actionBtn.textContent = 'Stop';
-                }
-            }
-
-            function start() {
-                navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-                    .then(_stream => {
-                        stream = _stream;
-                        console.log('stream', stream);
-                        video.srcObject = stream;
-                        video.play();
-                        streaming = true;
-                        src = new cv.Mat(height, width, cv.CV_8UC4);
-                        let distanceText = document.getElementById('distanceText');
-                        distanceText.innerText = "Keep the square image approximately 1 meter away from the camera.";
+        function start() {
+          navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then(_stream => {
+              stream = _stream;
+              console.log('stream', stream);
+              video.srcObject = stream;
+              video.play();
+              streaming = true;
+              src = new cv.Mat(height, width, cv.CV_8UC4);
+              let distanceText = document.getElementById('distanceText');
+              distanceText.innerText = "Keep the square image approximately 1 meter away from the camera.";
 
 
-                        // gray = new cv.Mat(height, width, cv.CV_8UC1);
-                        // blurred = new cv.Mat(height, width, cv.CV_8UC1);
-                        // canny = new cv.Mat(height, width, cv.CV_8UC1);
-                        // contours = new cv.MatVector();
-                        // hierarchy = new cv.Mat(height, width, cv.CV_8UC1);
-                        // dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+              // gray = new cv.Mat(height, width, cv.CV_8UC1);
+              // blurred = new cv.Mat(height, width, cv.CV_8UC1);
+              // canny = new cv.Mat(height, width, cv.CV_8UC1);
+              // contours = new cv.MatVector();
+              // hierarchy = new cv.Mat(height, width, cv.CV_8UC1);
+              // dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
 
-                        setTimeout(processVideo, 0)
-                    })
-                    .catch(err => console.log(`An error occurred: ${err}`));
-            }
-
-            function stop() {
-                let distanceText = document.getElementById('distanceText');
-                distanceText.innerText = "Press start on the screen or ENTER on the device to begin, then keep the square image approximately 1 meter away from the camera.";
-                if (video) {
-                    video.pause();
-                    video.srcObject = null;
-                }
-                if (stream) {
-                    stream.getVideoTracks()[0].stop();
-                }
-                streaming = false;
-            }
-
-            function updateDistance(nudge) {
-                let distanceNudge = document.getElementById('distanceNudge');
-                if (distanceNudge.innerText !== nudge) {
-                    distanceNudge.innerText = nudge;
-                }
-            }
-
-            function processVideo() {
-                if (!streaming) {
-                    src.delete();
-                    return;
-                }
-                const begin = Date.now();
-                cap.read(src)
-
-                let ksize = new cv.Size(3, 3);
-                var canny_output = new cv.Mat();
-                var blurred = new cv.Mat();
-                let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
-                var cthresh = 500;
-                var gray = new cv.Mat();
-                var threshImage = new cv.Mat();
-                let distance = null
-                let pos = { x: 0, y: 20 };
-
-
-
-                cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
-                cv.blur(gray, blurred, ksize);
-                cv.threshold(blurred, threshImage, 128, 255, cv.THRESH_BINARY);
-
-                cv.Canny(threshImage, canny_output, cthresh, cthresh * 2, 3, 0);
-
-                var contours = new cv.MatVector();
-                var hierarchy = new cv.Mat();
-                let poly = new cv.MatVector();
-
-                cv.findContours(canny_output, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
-
-                for (let i = 0; i < contours.size(); ++i) {
-                    let tmp = new cv.Mat();
-                    let cnt = contours.get(i);
-                    cv.approxPolyDP(cnt, tmp, 10, true);
-                    poly.push_back(tmp);
-                    cnt.delete(); tmp.delete();
-                }
-
-                for (let i = 0; i < contours.size(); ++i) {
-                    let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.round(Math.random() * 255));
-                    let tmp = new cv.Mat();
-                    let cnt = contours.get(i);
-
-                    cv.approxPolyDP(cnt, tmp, 0.02 * cv.arcLength(cnt, true), true);
-                    if (tmp.rows === 4) {
-                        let rect = cv.boundingRect(tmp);
-                        let aspectRatio = rect.width / rect.height;
-                        if ((Math.abs(aspectRatio - 1) < 0.1) && rect.width > 5) { // Keep only rectangles with aspect ratio close to 1
-                            cv.drawContours(dst, poly, i, color, 1, cv.LINE_8, hierarchy, 100);
-
-                            // Get the bounding rectangle for the contour
-                            let dimensions_text = `${rect.width} x ${rect.height}`
-
-                            // Distance calculation
-                            // Just a variable to test
-                            const focalLength = 2.6
-
-                            // original square object size
-                            // Just a variable to test
-                            const objectSize = 7.8
-
-                            pixelSize = (rect.width)
-
-                            // desired distance to object
-                            const testDistance = 50
-                            const safeMargin = 20
-
-                            // Log the dimensions of the bounding rectangle
-                            distance = (objectSize * (focalLength) / (pixelSize)).toFixed(2)
-                            array_distance = (objectSize * (focalLength) / (pixelSize)).toFixed(1)
-                            // cv.putText(dst, dimensions_text, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
-                            // console.log(dimensions_text);
-                            tempArray = distanceArray
-
-                            if (tempArray.length = 15) {
-                                tempArray.shift()
-                                tempArray.push(parseFloat(array_distance))
-
-                                sum = tempArray.reduce((a, b) => a + b, 0);
-                                avg = (sum / tempArray.length)
-                                if ((array_distance - avg < 0.1) && (array_distance - avg > -0.1)) {
-                                    distanceArray = tempArray
-
-                                    curdist = distance;
-
-                                    if (distance * 100 > testDistance + safeMargin) {
-                                        current = 'far';
-                                    }
-
-                                    else if (distance * 100 < testDistance - safeMargin) {
-                                        current = 'close';
-                                    }
-
-                                    else {
-                                        current = 'correct';
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    cnt.delete(); tmp.delete();
-                }
-
-                cv.putText(dst, `${curdist} m`, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
-
-                switch (current) {
-                    case 'far':
-                        updateDistance("Please move closer");
-                        cv.putText(dst, `Move closer`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
-                        break;
-                    case 'close':
-                        updateDistance("Please move further away");
-                        cv.putText(dst, `Move further away`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
-                        break;
-                    case 'correct':
-                        updateDistance("Correct position! Hold current position throughout the test. Press any key on the device to start the test.");
-                        cv.putText(dst, `Correct position!`, { x: 170, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(0, 255, 0), 1);
-                        break;
-                }
-
-                cv.imshow('canvasOutput', dst);
-                gray.delete();
-                blurred.delete();
-                canny_output.delete();
-                contours.delete();
-                hierarchy.delete();
-                dst.delete();
-                const delay = 1000 / FPS - (Date.now() - begin);
-                setTimeout(processVideo, delay);
-            }
+              setTimeout(processVideo, 0)
+            })
+            .catch(err => console.log(`An error occurred: ${err}`));
         }
+
+        function stop() {
+          let distanceText = document.getElementById('distanceText');
+          distanceText.innerText = "Press start on the screen or ENTER on the device to begin, then keep the square image approximately 1 meter away from the camera.";
+          if (video) {
+            video.pause();
+            video.srcObject = null;
+          }
+          if (stream) {
+            stream.getVideoTracks()[0].stop();
+          }
+          streaming = false;
+        }
+
+        function updateDistance(nudge) {
+          let distanceNudge = document.getElementById('distanceNudge');
+          if (distanceNudge.innerText !== nudge) {
+            distanceNudge.innerText = nudge;
+          }
+        }
+
+        function processVideo() {
+          if (!streaming) {
+            src.delete();
+            return;
+          }
+          const begin = Date.now();
+          cap.read(src)
+
+          let ksize = new cv.Size(3, 3);
+          var canny_output = new cv.Mat();
+          var blurred = new cv.Mat();
+          let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+          var cthresh = 500;
+          var gray = new cv.Mat();
+          var threshImage = new cv.Mat();
+          let distance = null
+          let pos = { x: 0, y: 20 };
+
+
+
+          cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+          cv.blur(gray, blurred, ksize);
+          cv.threshold(blurred, threshImage, 128, 255, cv.THRESH_BINARY);
+
+          cv.Canny(threshImage, canny_output, cthresh, cthresh * 2, 3, 0);
+
+          var contours = new cv.MatVector();
+          var hierarchy = new cv.Mat();
+          let poly = new cv.MatVector();
+
+          cv.findContours(canny_output, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
+
+          for (let i = 0; i < contours.size(); ++i) {
+            let tmp = new cv.Mat();
+            let cnt = contours.get(i);
+            cv.approxPolyDP(cnt, tmp, 10, true);
+            poly.push_back(tmp);
+            cnt.delete(); tmp.delete();
+          }
+
+          for (let i = 0; i < contours.size(); ++i) {
+            let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.round(Math.random() * 255));
+            let tmp = new cv.Mat();
+            let cnt = contours.get(i);
+
+            cv.approxPolyDP(cnt, tmp, 0.02 * cv.arcLength(cnt, true), true);
+            if (tmp.rows === 4) {
+              let rect = cv.boundingRect(tmp);
+              let aspectRatio = rect.width / rect.height;
+              if ((Math.abs(aspectRatio - 1) < 0.1) && rect.width > 5) { // Keep only rectangles with aspect ratio close to 1
+                cv.drawContours(dst, poly, i, color, 1, cv.LINE_8, hierarchy, 100);
+
+                // Get the bounding rectangle for the contour
+                let dimensions_text = `${rect.width} x ${rect.height}`
+
+                // Distance calculation
+                // Just a variable to test
+                const focalLength = 2.6
+
+                // original square object size
+                // Just a variable to test
+                const objectSize = 7.8
+
+                pixelSize = (rect.width)
+
+                // desired distance to object
+                const testDistance = 50
+                const safeMargin = 20
+
+                // Log the dimensions of the bounding rectangle
+                distance = (objectSize * (focalLength) / (pixelSize)).toFixed(2)
+                array_distance = (objectSize * (focalLength) / (pixelSize)).toFixed(1)
+                // cv.putText(dst, dimensions_text, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
+                // console.log(dimensions_text);
+                tempArray = distanceArray
+
+                if (tempArray.length = 15) {
+                  tempArray.shift()
+                  tempArray.push(parseFloat(array_distance))
+
+                  sum = tempArray.reduce((a, b) => a + b, 0);
+                  avg = (sum / tempArray.length)
+                  if ((array_distance - avg < 0.1) && (array_distance - avg > -0.1)) {
+                    distanceArray = tempArray
+
+                    curdist = distance;
+
+                    if (distance * 100 > testDistance + safeMargin) {
+                      current = 'far';
+                    }
+
+                    else if (distance * 100 < testDistance - safeMargin) {
+                      current = 'close';
+                    }
+
+                    else {
+                      current = 'correct';
+                    }
+                  }
+                }
+              }
+            }
+            cnt.delete(); tmp.delete();
+          }
+
+          cv.putText(dst, `${curdist} m`, pos, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 255, 255), 1);
+
+          switch (current) {
+            case 'far':
+              updateDistance("Please move closer");
+              cv.putText(dst, `Move closer`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
+              break;
+            case 'close':
+              updateDistance("Please move further away");
+              cv.putText(dst, `Move further away`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
+              break;
+            case 'correct':
+              updateDistance("Correct position! Hold current position throughout the test. Press any key on the device to start the test.");
+              cv.putText(dst, `Correct position!`, { x: 170, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(0, 255, 0), 1);
+              break;
+          }
+
+          cv.imshow('canvasOutput', dst);
+          gray.delete();
+          blurred.delete();
+          canny_output.delete();
+          contours.delete();
+          hierarchy.delete();
+          dst.delete();
+          const delay = 1000 / FPS - (Date.now() - begin);
+          setTimeout(processVideo, delay);
+        }
+      }
 
     </script>
     <footer class="loginpage-footer">
-        <span class="loginpage-text4">Spectaicles</span>
-        <span class="loginpage-text5">
-            © 2023&nbsp;Spectaicles All Rights Reserved.
-        </span>
+      <span class="loginpage-text4">Spectaicles</span>
+      <span class="loginpage-text5">
+        © 2023&nbsp;Spectaicles All Rights Reserved.
+      </span>
     </footer>
-    </body>
+  </body>
 
 </html>
