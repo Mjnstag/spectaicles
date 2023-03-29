@@ -191,3 +191,12 @@ main div {
     display: none;
   }
 }
+
+.distance {
+  width: 80vw;
+  text-align: center;
+}
+
+#base_img {
+  width: 75vw;
+}
