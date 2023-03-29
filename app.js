@@ -30,8 +30,8 @@ app.get('/webcam', (req, res) => {
   res.render('./pages/webcam')
 })
 
-app.get('/webcam2', (req, res) => {
-  res.render('./pages/webcam2')
+app.get('/distance', (req, res) => {
+  res.render('./pages/distance')
 })
 
 app.get('/webcam3', (req, res) => {

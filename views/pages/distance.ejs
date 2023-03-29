@@ -19,8 +19,8 @@
         <button class="loginpage-button button" id="actionBtn">Start</button>
     </div>
     <br>
-    <video id="video" width="300" height="225"></video>
-    <canvas id="canvasOutput"></canvas>
+    <video hidden id="video" width="300" height="225"></video>
+    <canvas hidden id="canvasOutput"></canvas>
     <script async src="https://docs.opencv.org/4.5.4/opencv.js" type="text/javascript" onload="onCvLoaded();"></script>
     <script>
         function onCvLoaded() {
@@ -60,12 +60,12 @@
                 else if (event.keyCode === 32) {
                     console.log('Clicked space');
 
-                    if (distanceNudge.innerText === "Correct position! Hold current position throughout the test.") {
+                    if (distanceNudge.innerText === "Correct position! Hold current position throughout the test. Press any key on the device to start the test.") {
                         console.log('moving to eye test');
                         if (streaming) {
                             keypress();
                         }
-                        window.location.href = "/test-eye"
+                        window.location.href = "/test-turn"
                     }
                 }
             };
@@ -242,7 +242,7 @@
                         cv.putText(dst, `Move further away`, { x: 200, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(255, 0, 0), 1);
                         break;
                     case 'correct':
-                        updateDistance("Correct position! Hold current position throughout the test.");
+                        updateDistance("Correct position! Hold current position throughout the test. Press any key on the device to start the test.");
                         cv.putText(dst, `Correct position!`, { x: 170, y: 20 }, cv.FONT_HERSHEY_SIMPLEX, 0.5, new cv.Scalar(0, 255, 0), 1);
                         break;
                 }
