@@ -26,8 +26,8 @@ function keyCheck(event) {
     iconFour.classList.add('hidden');
   }
 
-  if (event.keyCode === 67) {
-    console.log('C is pressed')
+  if (event.keyCode === 68) {
+    console.log('D is pressed')
     iconOne.classList.add('hidden');
     iconTwo.classList.add('hidden');
     iconThree.classList.remove('active');
